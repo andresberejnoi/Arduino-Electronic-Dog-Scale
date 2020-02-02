@@ -141,7 +141,7 @@ void displayText(String str) {
 void start_msg(){
   //Make simple text animation at startup just to have fun
   int delay_miliseconds = 400;
-  
+
   /*First display current software version*/
   lcd.setCursor(0,0);
   lcd.print("Ver ");
