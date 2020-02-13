@@ -10,7 +10,7 @@
 #include <LiquidCrystal_attiny.h> // for LCD w/ GPIO MODIFIED for the ATtiny85
 
 // Setting version number (Not strongly enforced but good to keep in mind
-const char VERSION[16] = "0.1.0";
+const char VERSION[8] = "0.2.0";
 
 // HX711 circuit wiring
 const int LOADCELL_DOUT_PIN = 3; //    2;           digital pin 3 is physical pin 2
@@ -32,7 +32,7 @@ void setup() {
   //lcd.begin(16,2);   //starting a 16x2 display (16 columns and 2 rows)
   lcd.init();
   lcd.noBacklight();
-  delay(50);
+  //delay(50);
   lcd.backlight();
   lcd.clear();
 
@@ -67,7 +67,7 @@ void setup() {
 						// by the SCALE parameter (not set yet)
   scale.get_units(5);
 
-  scale.set_scale(2280.f);                      // this value is obtained by calibrating the scale with known weights; see the README for details
+  scale.set_scale(-2290.f);                      // this value is obtained by calibrating the scale with known weights; see the README for details
   scale.tare();				        // reset the scale to 0
 
   //lcd.print(scale.read());                 // print a raw reading from the ADC
@@ -84,7 +84,8 @@ void setup() {
 }
 
 void loop() {
-  float current_weight = (scale.get_units(10) / 10) * -1;   //result is in kg. Divide by 10 because it is one order of magnitude higher. Multiply by -1 because results are giving negative for some reason
+  //float current_weight = (scale.get_units(10) / 10) * -1;   //result is in kg. Divide by 10 because it is one order of magnitude higher. Multiply by -1 because results are giving negative for some reason
+  float current_weight = (scale.get_units(25) / 10); //* -1;   //result is in kg. Divide by 10 because it is one order of magnitude higher. Multiply by -1 because results are giving negative for some reason
   float weight_lbs = current_weight * KG_to_LBS_factor;
 
   /*****************************************************************************************
@@ -109,12 +110,14 @@ void loop() {
 
 
   lcd.setCursor(0,0);   //set cursor at column zero and row zero on display (top left for a 16x2 display)
-  lcd.print(current_weight);
+  //lcd.print(current_weight);
+  displayText(String(current_weight));
   lcd.setCursor(6,0);
   displayText(" kg");
 
   lcd.setCursor(0,1);   //set cursors at column zero and row 1 on display (bottom left for a 16x2 display)
-  lcd.print(weight_lbs);
+  //lcd.print(weight_lbs);
+  displayText(String(weight_lbs));
   lcd.setCursor(6,1);
   displayText(" lbs");
 
@@ -149,7 +152,8 @@ void start_msg(){
   /*First display current software version*/
   lcd.setCursor(0,0);
   displayText("Ver ");
-  lcd.print(VERSION);
+  displayText(VERSION);
+  //lcd.print(VERSION);
   delay(1200);
   lcd.clear();
 
