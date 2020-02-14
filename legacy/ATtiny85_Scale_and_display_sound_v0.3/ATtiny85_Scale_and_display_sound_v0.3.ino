@@ -10,7 +10,7 @@
 #include <LiquidCrystal_attiny.h> // for LCD w/ GPIO MODIFIED for the ATtiny85
 
 // Setting version number (Not strongly enforced but good to keep in mind
-const char VERSION[8] = "0.3.0";
+const char VERSION[8] = "0.4.0";
 
 // HX711 circuit wiring
 const int LOADCELL_DOUT_PIN = 3; //    2;           digital pin 3 is physical pin 2
@@ -72,7 +72,7 @@ void setup() {
   // by the SCALE parameter (not set yet)
   scale.get_units(5);
 
-  scale.set_scale(-2290.f);                      // this value is obtained by calibrating the scale with known weights; see the README for details
+  scale.set_scale(-2293.f);                      // this value is obtained by calibrating the scale with known weights; see the README for details
   scale.tare();				        // reset the scale to 0
 
   //lcd.print(scale.read());                 // print a raw reading from the ADC
@@ -86,11 +86,23 @@ void setup() {
   scale.get_units(10);
   lcd.clear();
   beep();
+
+  displayText("Get on...");
+  delay(700);
+  lcd.clear();
+  //float current_weight = (scale.get_units(10) / 10); //* -1;   //result is in kg. Divide by 10 because it is one order of magnitude higher. Multiply by -1 because results are giving negative for some reason
+  //float weight_lbs = current_weight * KG_to_LBS_factor;
+  //print_kg(current_weight);
+  //print_lbs(weight_lbs);
+
+  //scale.power_down();              // put the ADC in sleep mode
+  //delay(1500);
+  //scale.power_up();
 }
 
 void loop() {
   //float current_weight = (scale.get_units(10) / 10) * -1;   //result is in kg. Divide by 10 because it is one order of magnitude higher. Multiply by -1 because results are giving negative for some reason
-  float current_weight = (scale.get_units(25) / 10); //* -1;   //result is in kg. Divide by 10 because it is one order of magnitude higher. Multiply by -1 because results are giving negative for some reason
+  float current_weight = (scale.get_units(15) / 10); //* -1;   //result is in kg. Divide by 10 because it is one order of magnitude higher. Multiply by -1 because results are giving negative for some reason
   float weight_lbs = current_weight * KG_to_LBS_factor;
 
   /*
@@ -121,10 +133,11 @@ void loop() {
     print_kg(current_weight);
     print_lbs(weight_lbs);
   
-    scale.power_down();              // put the ADC in sleep mode
-    delay(2000);
-    scale.power_up();
+    
   }
+  scale.power_down();              // put the ADC in sleep mode
+  delay(1500);
+  scale.power_up();
   LAST_WEIGHT = current_weight;
 
 }
@@ -168,14 +181,14 @@ void print_percent_diff(float pct_diff){
 }
 void start_msg() {
   //Make simple text animation at startup just to have fun
-  int delay_miliseconds = 400;
+  int delay_miliseconds = 350;
 
   /*First display current software version*/
   lcd.setCursor(0, 0);
   displayText("Ver ");
   displayText(VERSION);
   //lcd.print(VERSION);
-  delay(1200);
+  delay(1100);
   lcd.clear();
 
   /*Now go on to display the starting msg*/
