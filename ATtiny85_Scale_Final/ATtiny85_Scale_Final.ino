@@ -10,7 +10,7 @@
 #include <LiquidCrystal_attiny.h> // for LCD w/ GPIO MODIFIED for the ATtiny85
 
 // Setting version number (Not strongly enforced but good to keep in mind
-const char VERSION[8] = "0.4.0";
+const char VERSION[8] = "0.5.0";
 
 // HX711 circuit wiring
 const int LOADCELL_DOUT_PIN = 3; //    2;           digital pin 3 is physical pin 2
@@ -72,7 +72,8 @@ void setup() {
   // by the SCALE parameter (not set yet)
   scale.get_units(5);
 
-  scale.set_scale(-2293.f);                      // this value is obtained by calibrating the scale with known weights; see the README for details
+  //scale.set_scale(-2293.f);                      // this value is obtained by calibrating the scale with known weights; see the README for details
+  scale.set_scale(-22930.f);
   scale.tare();				        // reset the scale to 0
 
   //lcd.print(scale.read());                 // print a raw reading from the ADC
@@ -102,13 +103,14 @@ void setup() {
 
 void loop() {
   //float current_weight = (scale.get_units(10) / 10) * -1;   //result is in kg. Divide by 10 because it is one order of magnitude higher. Multiply by -1 because results are giving negative for some reason
-  float current_weight = (scale.get_units(15) / 10); //* -1;   //result is in kg. Divide by 10 because it is one order of magnitude higher. Multiply by -1 because results are giving negative for some reason
+  //float current_weight = (scale.get_units(20) / 10); //* -1;   //result is in kg. Divide by 10 because it is one order of magnitude higher. Multiply by -1 because results are giving negative for some reason
+  float current_weight = scale.get_units(15);
   float weight_lbs = current_weight * KG_to_LBS_factor;
 
   /*
      Compare current reading to last one. If difference is less than specified percentage, then don't update display
   */
-  float diff = abs(current_weight - LAST_WEIGHT);
+  /*float diff = abs(current_weight - LAST_WEIGHT);
   float pct_diff = (diff * 100) / LAST_WEIGHT;  //Percent difference between last weight and current one
   if (pct_diff < MAX_TOLERANCE){    //means weight reading has remained stable
     FINISHED_COUNT += 1;
@@ -134,7 +136,9 @@ void loop() {
     print_lbs(weight_lbs);
   
     
-  }
+  }*/
+  print_kg(current_weight);
+  print_lbs(weight_lbs);
   scale.power_down();              // put the ADC in sleep mode
   delay(1500);
   scale.power_up();
