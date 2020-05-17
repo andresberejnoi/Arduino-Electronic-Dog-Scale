@@ -16,9 +16,9 @@ const int LOADCELL_SCK_PIN = 3;
 
 const int SPEAKER_OUT = 9;  //output pin for speaker
 
-const char VERSION[16] = "0.1.0";  // this is the software version. Keep it synched to the other Attiny file. It might be better to put it in a .h file and include it from both
+const char VERSION[16] = "0.5.1";  // this is the software version. Keep it synched to the other Attiny file. It might be better to put it in a .h file and include it from both
 
-const float KG_to_LBS_factor = 2.205;   //an approximation taken from the internet. Multiply kg by this factor to get pounds
+const float KG_to_LBS_factor = 2.205;   //an approximation. Multiply kg by this factor to get pounds
 
 HX711 scale;
 LiquidCrystal_I2C lcd(0x27,2,1,0,4,5,6,7,3,POSITIVE);      //got all the LCD stuff from a post online. I wish I saved the link
@@ -41,25 +41,13 @@ void setup() {
   beep();
   start_msg();
 
-  // Initialize library with data output pin, clock input pin and gain factor.
-  // Channel selection is made by passing the appropriate gain:
-  // - With a gain factor of 64 or 128, channel A is selected
-  // - With a gain factor of 32, channel B is selected
-  // By omitting the gain factor parameter, the library
-  // default "128" (Channel A) is used here.
   scale.begin(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
 
-  //lcd.print(scale.read());			// print a raw reading from the ADC
   scale.read();
 
-  //lcd.print(scale.read_average(20));  	// print the average of 20 readings from the ADC
   scale.read_average(20);
 
-  //lcd.print("get value: \t\t");setting up the scale
-  //lcd.print(scale.get_value(5));		// print the average of 5 readings from the ADC minus the tare weight (not set yet)
   scale.get_value(5);
-  //lcd.print(scale.get_units(5), 1);	// print the average of 5 readings from the ADC minus tare weight (not set) divided
-						// by the SCALE parameter (not set yet)
   scale.get_units(5);
 
   scale.set_scale(2280.f);                      // this value is obtained by calibrating the scale with known weights; see the README for details
@@ -116,7 +104,6 @@ void loop() {
   scale.power_down();			        // put the ADC in sleep mode
   delay(2000);
   scale.power_up();
-  //lcd.clear();
   //beep();
 }
 
@@ -173,6 +160,4 @@ void start_msg(){
   lcd.setCursor(12,0);
   lcd.print(".");
   delay(delay_miliseconds);
-
-  //lcd.clear();
 }
