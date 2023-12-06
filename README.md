@@ -1,5 +1,5 @@
 # Dog Scale
-This is a scale meant for weighting our dogs and maybe suitcases by using 4 3-wire load cells connected to an amplifier HX711 and displaying the code to a 16x2 LCD screen with an included I2C backpack to control it.
+This is a scale meant for weighting our dogs and maybe suitcases by using 4 3-wire load cells connected to an amplifier HX711 and displaying the code to a 16x2 LCD screen with an included I2C backpack to control it. I also made a Youtube video about this project, in case you want to see the final result, including a nice wooden platform. You can watch the video [here](https://youtu.be/P-fGgXq-RAM).
 
 The micro-controller was initially an Arduino Uno / Diavolino model but since there were many pins not being used, and I did not want to use my entire Arduino for this, I decided to miniaturize this project by using an ATtiny85 chip. It has just the right amount of pins for this and the size is very conservative.
 
